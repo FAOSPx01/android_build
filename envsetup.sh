@@ -500,6 +500,13 @@ function lunch()
 
 function _lunch_meat()
 {
+    if (echo -n $1 | grep -q -e "^x01_") ; then
+        X01_BUILD=$(echo -n $1 | sed -e 's/^x01_//g')
+    else
+        X01_BUILD=
+    fi
+    export X01_BUILD
+
     local product=$1
     local release=$2
     local variant=$3
@@ -523,6 +530,8 @@ function _lunch_meat()
     export TARGET_BUILD_TYPE=release
 
     [[ -n "${ANDROID_QUIET_BUILD:-}" ]] || echo
+
+    fixup_common_out_dir
 
     set_stuff_for_environment
     [[ -n "${ANDROID_QUIET_BUILD:-}" ]] || printconfig
